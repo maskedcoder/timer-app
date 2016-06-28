@@ -52,13 +52,13 @@
       var $currentPage = document.getElementById(idFromHref($tab.href));
 
       this.$tabs.forEach(function($tb) {
-        $tb.classList.remove('c-tabs__item--current');
+        $tb.classList.remove('c-tabs__link--current');
       });
       this.$contents.forEach(function($content) {
         $content.classList.remove('c-page--current');
       });
 
-      $tab.classList.add('c-tabs__item--current');
+      $tab.classList.add('c-tabs__link--current');
       $currentPage.classList.add('c-page--current');
     }
   };

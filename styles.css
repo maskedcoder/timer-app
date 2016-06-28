@@ -16,6 +16,9 @@
  * Page................................High-level page styling
  * Images..............................inuitcss' image defaults
  * Lists...............................inuitcss' list adjustments
+ *
+ * COMPONENTS
+ * Tabs................................Tab widget
  */
 
 
@@ -622,4 +625,65 @@ img[height] { /* [2] */
 li > ul,
 li > ol {
   margin-bottom: 0;
+}
+
+
+
+
+/*------------------------------------*
+    #COMPONENTS
+\*------------------------------------*/
+
+/*------------------------------------*
+    #TABS
+\*------------------------------------*/
+
+.c-top {
+  background: #f7eeee;
+  border-bottom: 1px solid #ceb2b2;
+}
+
+.c-tabs {
+  text-align: center;
+
+  list-style: none;
+  margin: 0;
+}
+
+  .c-tabs__item {
+    display: inline-block;
+  }
+
+    .c-tabs__item + .c-tabs__item {
+      margin-left: 16px;
+    }
+
+    .c-tabs__link {
+      display: inline-block;
+
+      padding-top: 16px;
+      padding-bottom: 16px;
+
+      font-family: 'Constantia', serif;
+      font-size: 20px;
+      font-size: 1.25rem;
+      text-decoration: none;
+      color: #4e4e4e;
+    }
+
+      .c-tabs__link:link {
+        color: #333;
+      }
+
+      .c-tabs__link:hover,
+      .c-tabs__link--current {
+        border-bottom: 3px solid #e21b49;
+      }
+
+.c-page {
+  display: none;
+}
+
+.c-page--current {
+  display: block;
 }
