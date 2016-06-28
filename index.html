@@ -16,11 +16,18 @@
       </ul>
     </nav>
   </header>
-  <main>
+  <main class="o-wrapper">
     <section id="home" class="c-page c-page--current">
-      <h1 class="u-visuallyhidden">Timer</h1>
-      <input type="text" name="description" class="">
-      <button class="c-button c-button--on"><span class="u-visuallyhidden">Go!</span></button>
+      <div class="c-timer u-align--center  js-timer">
+        <h1 class="u-visuallyhidden">Timer</h1>
+        <input type="text" name="description" class="c-timer__name  js-name" placeholder="What are you doing?">
+        <div class="u-align--center">
+          <button class="c-button c-button--sub-timer c-button--cancel  js-cancel"><span class="u-visuallyhidden">Cancel!</span></button>
+          <button class="c-button c-button--timer c-button--go  js-toggle"><span class="u-visuallyhidden">Go!</span></button>
+          <button class="c-button c-button--sub-timer c-button--save  js-accept"><span class="u-visuallyhidden">Save!</span></button>
+        </div>
+        <p class="c-timer__display js-time-display">00:01:35.45</p>
+      </div>
     </section>
     <section id="stats" class="c-page">
       <h1>Stats</h1>

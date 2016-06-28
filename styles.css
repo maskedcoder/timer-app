@@ -17,9 +17,22 @@
  * Images..............................inuitcss' image defaults
  * Lists...............................inuitcss' list adjustments
  *
+ * OBJECTS
+ * Wrapper.............................Content wrappers
+ *
  * COMPONENTS
  * Tabs................................Tab widget
+ * Button..............................Buttons
+ * Timer...............................Timer widget
+ *
+ * UTILITIES
+ * Hide................................Showing/hiding helpers
+ * Alignment...........................Alignment helper classes
  */
+
+
+
+
 
 
 
@@ -27,6 +40,9 @@
 /*------------------------------------*
     #GENERIC
 \*------------------------------------*/
+
+
+
 
 /*! normalize.css v4.1.1 | MIT License | github.com/necolas/normalize.css */
 
@@ -549,9 +565,16 @@ h6 {
 
 
 
+
+
+
+
 /*------------------------------------*
     #BASE
 \*------------------------------------*/
+
+
+
 
 /*------------------------------------*
     #PAGE
@@ -570,6 +593,7 @@ h6 {
  * 4. Prevent certain mobile browsers from automatically zooming fonts.
  */
 html {
+  font-family: 'Constantia', serif;
   font-size: 1em; /* [1] */
   line-height: 1.5; /* [1] */
   background-color: #fff;
@@ -630,9 +654,40 @@ li > ol {
 
 
 
+
+
+
+
+/*------------------------------------*
+    #OBJECTS
+\*------------------------------------*/
+
+
+
+
+/*------------------------------------*
+    #WRAPPER
+\*------------------------------------*/
+
+.o-wrapper {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+
+
+
+
+
 /*------------------------------------*
     #COMPONENTS
 \*------------------------------------*/
+
+
+
 
 /*------------------------------------*
     #TABS
@@ -664,9 +719,8 @@ li > ol {
       padding-top: 16px;
       padding-bottom: 16px;
 
-      font-family: 'Constantia', serif;
-      font-size: 20px;
-      font-size: 1.25rem;
+      font-size: 22px;
+      font-size: 1.375rem;
       text-decoration: none;
       color: #4e4e4e;
     }
@@ -686,4 +740,224 @@ li > ol {
 
 .c-page--current {
   display: block;
+}
+
+
+
+
+/*------------------------------------*
+    #BUTTON
+\*------------------------------------*/
+
+.c-button {
+  display: inline-block;
+
+  background: #e21b49;
+  border: 2px solid #e21b49;
+
+  cursor: pointer;
+
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+  .c-button:hover {
+    background-color: #f0466e;
+
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .c-button:active {
+    background-color: #dd0134;
+
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .c-button:focus {
+    outline: 0;
+    border-color: #b41be2;
+  }
+
+
+  .c-button--timer {
+    position: relative;
+
+    width: 200px;
+    height: 200px;
+
+    border-radius: 50%;
+  }
+
+  .c-button--sub-timer {
+    position: relative;
+
+    width: 80px;
+    height: 80px;
+
+    vertical-align: top;
+
+    border-radius: 50%;
+  }
+
+  .c-button--go:before {
+    content: "";
+    display: block;
+    position: absolute;
+
+    width: 0;
+    height: 0;
+    top: 50%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+
+    border-width: 60px 0 60px 120px;
+    border-style: solid;
+    border-color: transparent transparent transparent #fff;
+  }
+
+  .c-button--pause:before,
+  .c-button--pause:after {
+    content: "";
+    display: block;
+    position: absolute;
+
+    width: 40px;
+    height: 120px;
+    transform: translate(-50%, -50%);
+
+    background: #fff;
+  }
+
+  .c-button--pause:before {
+    top: 50%;
+    left: 35%;
+  }
+
+  .c-button--pause:after {
+    top: 50%;
+    left: 65%;
+  }
+
+  .c-button--cancel:after,
+  .c-button--cancel:before {
+    content: "";
+    display: block;
+    position: absolute;
+
+    width: 15px;
+    height: 50px;
+    left: 50%;
+    right: 50%;
+
+    background: #fff;
+  }
+
+  .c-button--cancel:before {
+    transform: translate(-50%, -50%)rotate(-45deg);
+  }
+
+  .c-button--cancel:after {
+    transform: translate(-50%, -50%)rotate(45deg);
+  }
+
+  .c-button--save:after,
+  .c-button--save:before {
+    content: "";
+    display: block;
+    position: absolute;
+
+    width: 0;
+    height: 0;
+    left: 50%;
+    top: 50%;
+
+    border: 0 solid transparent;
+  }
+
+  .c-button--save:before {
+    border-width: 0 1px 50px 12px;
+    border-bottom-color: #fff;
+    left: 39px;
+    top: 14px;
+    transform: rotate(45deg);
+  }
+
+  .c-button--save:after {
+    border-width: 0 11px 20px 0;
+    border-bottom-color: #fff;
+    left: 17px;
+    top: 33px;
+    transform: rotate(-45deg);
+  }
+
+
+
+
+/*------------------------------------*
+    #TIMER
+\*------------------------------------*/
+
+.c-timer {
+  padding-top: 24px;
+}
+
+  .c-timer__name {
+    margin-bottom: 24px;
+    max-width: 600px;
+    width: 90%;
+
+    padding: 0.5em;
+
+    line-height: 1;
+  }
+
+  .c-timer__display {
+    font-family: 'Calibri', sans-serif;
+    font-size: 45px;
+    font-size: 2.8125rem;
+  }
+
+
+
+
+
+
+
+
+/*------------------------------------*
+    #UTILITIES
+\*------------------------------------*/
+
+
+
+
+/*------------------------------------*
+    #HIDE
+\*------------------------------------*/
+
+/**
+ * Hide only visually, but have it available for screen readers:
+ * http://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+ */
+.u-visuallyhidden {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+
+  margin: -1px;
+  padding: 0;
+
+  border: 0;
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+
+
+
+/*------------------------------------*
+    #ALIGNMENT
+\*------------------------------------*/
+
+.u-align--center {
+  text-align: center;
 }
