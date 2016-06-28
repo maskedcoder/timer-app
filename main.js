@@ -269,12 +269,8 @@
       this.save();
     },
 
-    update: function(index, newName, newValue) {
-      var old = this.data[index];
-      this.data[index] = {
-        name: newName || old.name,
-        value: newValue || old.value
-      };
+    update: function(index, field, newValue) {
+      this.data[index][field] = newValue;
 
       this.save();
     },
@@ -329,10 +325,10 @@
 
 
   /*------------------------------------*
-      #DATALIST
+      #DATAVIEW
   \*------------------------------------*/
 
-  var Datalist = {
+  var Dataview = {
     store: null,
 
     init: function($display, store) {
@@ -350,18 +346,48 @@
       this.$table.addEventListener('click', function(e) {
         var $el = e.target;
 
-        // Handle delete buttons
+        // Handle delete
         if ($el.classList.contains('js-delete')) {
           that.deleteItem($el);
+          return;
+        }
+
+        // Handle edit
+        if ($el.classList.contains('js-edit')) {
+          that.editItem($el);
           return;
         }
       });
     },
 
     deleteItem: function($el) {
-      var id = findParent($el, '.js-row').getAttribute('data-id');
+      var id = findParent($el, '.js-row').dataset['id'];
       this.store.remove(Number(id));
       this.renderAll();
+    },
+
+    editItem: function($el) {
+      var that = this;
+      var value = $el.innerHTML;
+      var $input = document.createElement('input');
+
+      $input.type = 'text';
+      $input.value = value;
+      $input.className = 'js-inline-form';
+
+      $input.addEventListener('focusout', function() {
+        var id = findParent($el, '.js-row').dataset['id'];
+        var field = $el.dataset['field'];
+        var value = $input.value;
+
+        that.store.update(id, field, value);
+
+        that.renderAll();
+      });
+
+      $el.innerHTML = ''
+      $el.appendChild($input);
+      $input.focus();
     },
 
     renderAll: function() {
@@ -381,8 +407,8 @@
         data.forEach(function(item, index) {
           html += '<tr class="js-row" data-id="' + index + '">';
           html += '<td>' + (index + 1) + '</td>';
-          html += '<td>' + item.name + '</td>';
-          html += '<td>' + formatTime(item.value) + '</td>';
+          html += '<td class="js-edit" data-field="name">' + item.name + '</td>';
+          html += '<td data-field="value">' + formatTime(item.value) + '</td>';
           html += '<td><a class="js-delete" href="#delete">Delete</a></td>';
           html += '</tr>';
         });
@@ -405,13 +431,13 @@
     Store.init();
 
     var $dataview = document.querySelector('.js-datalist');
-    Datalist.init($dataview, Store);
+    Dataview.init($dataview, Store);
 
     var $tabs = document.querySelector('.js-tabs');
     TabWidget.init($tabs);
 
     window.addEventListener('tabchange', function() {
-      Datalist.renderAll();
+      Dataview.renderAll();
     });
 
     var $timer = document.querySelector('.js-timer');
