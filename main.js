@@ -181,7 +181,7 @@
     saveTimer: function() {
       if (this.active) {
         var now = Date.now()
-        this.total = now - this.timer;
+        this.total = this.total + (now - this.timer);
       }
 
       var title = this.$entry.value || 'Unnamed timer';
@@ -202,7 +202,7 @@
     toggleTimer: function() {
       if (this.active) {
         var now = Date.now();
-        this.total = now - this.timer;
+        this.total = this.total + (now - this.timer);
 
         this.timer = false;
         this.active = false;
