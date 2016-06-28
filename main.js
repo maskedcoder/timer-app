@@ -1,6 +1,15 @@
 (function() {
 
   /*------------------------------------*
+      #GLOBALS
+  \*------------------------------------*/
+
+  var SESSION_STORAGE_NAME = 'timer-data';
+
+
+
+
+  /*------------------------------------*
       #HELPERS
   \*------------------------------------*/
 
@@ -38,11 +47,17 @@
     return hours + ':' + minutes + ':' + seconds + '.' + ms;
   }
 
+  var capitalize = function(string) {
+    return string.replace(/\b([a-z])/g, function ($) {
+      return $.toUpperCase();
+    });
+  }
+
 
 
 
   /*------------------------------------*
-      #WIDGETS
+      #COMPONENTS
   \*------------------------------------*/
 
   /*------------------------------------*
@@ -90,6 +105,8 @@
 
       $tab.classList.add('c-tabs__link--current');
       $currentPage.classList.add('c-page--current');
+
+      window.dispatchEvent(new Event('tabchange'));
     }
   };
 
@@ -105,16 +122,20 @@
     $save: null,
     $toggle: null,
 
+    store: null,
+
     active: false,
     total: 0,
     timer: null,
 
-    init: function($element) {
+    init: function($element, store) {
       this.$display = $element.querySelector('.js-time-display');
       this.$entry = $element.querySelector('.js-name');
       this.$stop = $element.querySelector('.js-cancel');
       this.$save = $element.querySelector('.js-accept');
       this.$toggle = $element.querySelector('.js-toggle');
+
+      this.store = store;
 
       this.bindUIEvents();
     },
@@ -151,8 +172,9 @@
 
       var title = this.$entry.value || 'Unnamed timer';
 
-      // TODO: actually save it, perhaps?
-      alert(title + ' - ' + formatTime(this.total));
+      this.store.add(title, this.total);
+
+      alert('Save successful');
 
       this.active = false;
       this.total = 0;
@@ -206,6 +228,124 @@
   };
 
 
+  /*------------------------------------*
+      #STORE
+  \*------------------------------------*/
+
+  var Store = {
+    data: [],
+
+    init: function() {
+      this.reload();
+    },
+
+    add: function(name, value) {
+      this.data.push({
+        name: name,
+        value: value
+      });
+
+      this.save();
+    },
+
+    update: function(index, newName, newValue) {
+      var old = this.data[index];
+      this.data[index] = {
+        name: newName || old.name,
+        value: newValue || old.value
+      };
+
+      this.save();
+    },
+
+    search: function(name) {
+      return this.data.find(function(item) {
+        return item.name.indexOf(name);
+      });
+    },
+
+    query: function(fields) {
+      if (fields === '*') {
+        return JSON.parse(JSON.stringify(this.data));
+      } else {
+
+        return this.data.map(function(row) {
+          var data = {};
+
+          fields.forEach(function(field) {
+            data[field] = row[field];
+          });
+
+          return data;
+        });
+
+      }
+    },
+
+    reload: function() {
+      var data = sessionStorage.getItem(SESSION_STORAGE_NAME);
+
+      if (data) {
+        this.data = JSON.parse(data);
+      } else {
+        this.data = [];
+      }
+    },
+
+    save: function() {
+      var data = JSON.stringify(this.data);
+      sessionStorage.setItem(SESSION_STORAGE_NAME, data);
+    }
+  };
+
+
+  /*------------------------------------*
+      #DATALIST
+  \*------------------------------------*/
+
+  var Datalist = {
+    store: null,
+
+    init: function($display, store) {
+      this.$display = $display;
+      this.$table = $display.querySelector('.js-table');
+      this.store = store;
+
+      this.renderAll();
+      this.bindUIEvents();
+    },
+
+    bindUIEvents: function() {},
+
+    renderAll: function() {
+      var html = '';
+
+      var data = this.store.query('*');
+
+      if (data.length) {
+        html += '<tr>';
+        html += '<th>Index</th>';
+        for (var field in data[0]) {
+          html += '<th>' + capitalize(field) + '</th>';
+        }
+        html += '</tr>';
+
+        data.forEach(function(item, index) {
+          html += '<tr data-id="' + index + '">';
+          html += '<td>' + (index + 1) + '</td>';
+          html += '<td>' + item.name + '</td>';
+          html += '<td>' + formatTime(item.value) + '</td>';
+          html += '</tr>';
+        });
+      } else {
+        html = '<p><em>I&rsquo;m so sorry! There is no data.</em></p>';
+      }
+
+      this.$table.innerHTML = html;
+    }
+  };
+
+
 
 
   /*------------------------------------*
@@ -213,11 +353,20 @@
   \*------------------------------------*/
 
   function main() {
+    Store.init();
+
+    var $dataview = document.querySelector('.js-datalist');
+    Datalist.init($dataview, Store);
+
     var $tabs = document.querySelector('.js-tabs');
     TabWidget.init($tabs);
 
+    window.addEventListener('tabchange', function() {
+      Datalist.renderAll();
+    });
+
     var $timer = document.querySelector('.js-timer');
-    TimerWidget.init($timer);
+    TimerWidget.init($timer, Store);
   }
 
   main();
