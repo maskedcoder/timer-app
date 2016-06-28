@@ -53,6 +53,20 @@
     });
   }
 
+  var findParent = function($base, selector) {
+    var $parent = $base.parentElement;
+
+    while ($parent) {
+      if ($parent.matches(selector)) {
+        return $parent;
+      }
+
+      $parent = $parent.parentElement;
+    }
+
+    return false;
+  }
+
 
 
 
@@ -248,6 +262,13 @@
       this.save();
     },
 
+    remove: function(index) {
+      this.data = this.data.slice(0, index)
+                            .concat(this.data.slice(index + 1));
+
+      this.save();
+    },
+
     update: function(index, newName, newValue) {
       var old = this.data[index];
       this.data[index] = {
@@ -258,27 +279,35 @@
       this.save();
     },
 
-    search: function(name) {
-      return this.data.find(function(item) {
-        return item.name.indexOf(name);
-      });
-    },
+    query: function(fields, where, sortBy) {
+      var data = JSON.parse(JSON.stringify(this.data));
 
-    query: function(fields) {
+      if (where) {
+        data = data.filter(where);
+      }
+
+      if (sortBy) {
+        data = data.sort(sortBy);
+      }
+
       if (fields === '*') {
-        return JSON.parse(JSON.stringify(this.data));
-      } else {
+        return data;
 
-        return this.data.map(function(row) {
-          var data = {};
+      } else if (Array.isArray(fields)) {
+        return data.map(function(row) {
+          var datum = {};
 
           fields.forEach(function(field) {
-            data[field] = row[field];
+            datum[field] = row[field];
           });
 
-          return data;
+          return datum;
         });
 
+      } else {
+        return data.map(function(row) {
+          return row[fields];
+        });
       }
     },
 
@@ -315,7 +344,25 @@
       this.bindUIEvents();
     },
 
-    bindUIEvents: function() {},
+    bindUIEvents: function() {
+      var that = this;
+
+      this.$table.addEventListener('click', function(e) {
+        var $el = e.target;
+
+        // Handle delete buttons
+        if ($el.classList.contains('js-delete')) {
+          that.deleteItem($el);
+          return;
+        }
+      });
+    },
+
+    deleteItem: function($el) {
+      var id = findParent($el, '.js-row').getAttribute('data-id');
+      this.store.remove(Number(id));
+      this.renderAll();
+    },
 
     renderAll: function() {
       var html = '';
@@ -328,13 +375,15 @@
         for (var field in data[0]) {
           html += '<th>' + capitalize(field) + '</th>';
         }
+        html += '<th></th>';
         html += '</tr>';
 
         data.forEach(function(item, index) {
-          html += '<tr data-id="' + index + '">';
+          html += '<tr class="js-row" data-id="' + index + '">';
           html += '<td>' + (index + 1) + '</td>';
           html += '<td>' + item.name + '</td>';
           html += '<td>' + formatTime(item.value) + '</td>';
+          html += '<td><a class="js-delete" href="#delete">Delete</a></td>';
           html += '</tr>';
         });
       } else {
