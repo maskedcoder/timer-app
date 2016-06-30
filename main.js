@@ -4,7 +4,7 @@
       #GLOBALS
   \*------------------------------------*/
 
-  var SESSION_STORAGE_NAME = 'timer-data';
+  var LOCAL_STORAGE_NAME = 'timer-data';
 
 
 
@@ -308,7 +308,7 @@
     },
 
     reload: function() {
-      var data = sessionStorage.getItem(SESSION_STORAGE_NAME);
+      var data = localStorage.getItem(LOCAL_STORAGE_NAME);
 
       if (data) {
         this.data = JSON.parse(data);
@@ -319,7 +319,7 @@
 
     save: function() {
       var data = JSON.stringify(this.data);
-      sessionStorage.setItem(SESSION_STORAGE_NAME, data);
+      localStorage.setItem(LOCAL_STORAGE_NAME, data);
     }
   };
 
